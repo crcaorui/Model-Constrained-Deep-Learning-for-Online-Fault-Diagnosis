@@ -52,18 +52,7 @@ for i in range(1):
     EPOCH = 100
     BATCH_SIZE = 100
 
-    test_X_df = pd.DataFrame(test_X.cpu().detach().numpy()[:,0,:])
-    reframed = series_to_supervised(test_X_df, 1, 1)
-    reframed.drop(reframed.columns[INPUT_SIZE :INPUT_SIZE * 2 - 2], axis=1, inplace=True)
-    train = reframed.values
-    train_X, train_y = train[:, :-2], train[:, -2:]
-    train_y = train_y.reshape(-1, 2)
-    batch_train = int(reframed.shape[0] / TIME_STEP)
-
-    train_X = torch.tensor(train_X)
-    train_X = train_X.reshape(batch_train, TIME_STEP, INPUT_SIZE).to(device)
-    train_y = torch.tensor(train_y)
-    train_y = train_y.reshape(batch_train, TIME_STEP, 2).to(device)
+    train_X, train_y = prepare_training_data(test_X, INPUT_SIZE, TIME_STEP, device)
 
     train_dataset = MyDataset(train_X, train_y)
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)

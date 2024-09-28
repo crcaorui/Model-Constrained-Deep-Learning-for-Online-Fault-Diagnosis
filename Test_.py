@@ -109,13 +109,5 @@ for i in range(1):
     # threshold2 = np.mean(fai[nm:mm]) + 4.5*np.std(fai[nm:mm])
     # threshold3 = np.mean(fai[nm:mm]) + 6*np.std(fai[nm:mm])
 
-    import os
 
-    folder_path = "./data/QAS"
-    folders = os.listdir(folder_path)
-
-    for i, folder in enumerate(sorted(folders)):
-        old_name = os.path.join(folder_path, folder)
-        new_name = os.path.join(folder_path, str(i))
-        os.rename(old_name, new_name)
 

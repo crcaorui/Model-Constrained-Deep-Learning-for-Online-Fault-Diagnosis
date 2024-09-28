@@ -307,3 +307,19 @@ def ClassifyFeature(temp_max,temp_avg,CONTN,insulation_resistance,threshold1,fai
         features_array = np.vstack((features_array, new_features))  
     vin_feature = pd.DataFrame(features_array)
     return vin_feature
+
+def prepare_training_data(test_X, INPUT_SIZE, TIME_STEP, device):
+    test_X_df = pd.DataFrame(test_X.cpu().detach().numpy()[:,0,:])
+    reframed = series_to_supervised(test_X_df, 1, 1)
+    reframed.drop(reframed.columns[INPUT_SIZE:INPUT_SIZE * 2 - 2], axis=1, inplace=True)
+    train = reframed.values
+    train_X, train_y = train[:, :-2], train[:, -2:]
+    train_y = train_y.reshape(-1, 2)
+    batch_train = int(reframed.shape[0] / TIME_STEP)
+
+    train_X = torch.tensor(train_X)
+    train_X = train_X.reshape(batch_train, TIME_STEP, INPUT_SIZE).to(device)
+    train_y = torch.tensor(train_y)
+    train_y = train_y.reshape(batch_train, TIME_STEP, 2).to(device)
+    
+    return train_X, train_y

@@ -40,7 +40,7 @@ for i in range(1):
     vin = VIN_data.iloc[i, 0]
     print(vin)
 
-    lstm = torch.load('./models/lstm_0131.pth').to(device)
+    lstm = torch.load('./models/lstm.pth').to(device)
     with open('./data/test/' + vin + '/vin_1.pkl', 'rb') as file:
         test_X = pickle.load(file)
     # test

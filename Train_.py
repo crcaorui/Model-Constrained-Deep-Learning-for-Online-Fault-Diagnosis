@@ -34,9 +34,9 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 print(torch.cuda.device_count())
 
 warnings.filterwarnings('ignore')
+
+#----------------------------------------data loading------------------------------
 VIN_data = pd.read_excel('./data/Name_list.xls')  # Changed path and removed Chinese characters
-
-
 vin = VIN_data.iloc[1, 0]
 print(vin)
 
@@ -45,6 +45,8 @@ with open('./data/test/' + vin + '/vin_1.pkl', 'rb') as file:  # Changed path
     test_X = pickle.load(file)
 # test
 
+
+#----------------------------------------Hyper Parameter Setting---------------------
 TIME_STEP = 1  # rnn time step
 INPUT_SIZE = 7  # rnn input size
 LR = 1e-4  # learning rate
@@ -52,6 +54,7 @@ lr_decay_freq = 25
 EPOCH = 100
 BATCH_SIZE = 100
 
+#----------------------------------------Training for overall state prediction--------
 train_X, train_y = prepare_training_data(test_X, INPUT_SIZE, TIME_STEP, device)
 
 train_dataset = MyDataset(train_X, train_y)
@@ -80,6 +83,8 @@ with open('./data/test/' + vin + '/vin_2.pkl', 'rb') as file:  # Changed path
 with open('./data/test/' + vin + '/vin_3.pkl', 'rb') as file:  # Changed path
     combined_tensorx = pickle.load(file)
 
+
+#----------------------------------------Training for MC-AE--------------------------
 dim_x = 2
 dim_y = 110
 dim_z = 110
